@@ -1,0 +1,37 @@
+version: 2.1
+
+orbs:
+  prodsec: snyk/prodsec-orb@1
+  go: snyk/go@1.1.0
+
+defaults: &defaults
+  resource_class: small
+  docker:
+    - image: cimg/go:1.21.6-node
+
+jobs:
+  security_scans:
+    <<: *defaults
+    steps:
+      - checkout
+      - prodsec/security_scans:
+          mode: auto
+
+workflows:
+  version: 2
+  CICD:
+    jobs:
+      - prodsec/secrets-scan:
+          name: Scan repository for secrets
+          context:
+            - snyk-bot-slack
+          channel: runtime-rnd
+          filters:
+            branches:
+              only:
+                - main
+      - security_scans:
+          name: Security Scans
+          context:
+            - appsecex_runtime
+            - snyk-bot-slack
