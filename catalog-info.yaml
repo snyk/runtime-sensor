@@ -1,0 +1,12 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: runtime-sensor
+  description: A repository hosting the runtime-sensor Helm Charts
+  annotations:
+    github.com/project-slug: snyk/runtime-sensor
+    github.com/team-slug: snyk/appsecex-runtime
+spec:
+  type: external-tooling
+  lifecycle: "-"
+  owner: appsecex-runtime
