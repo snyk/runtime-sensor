@@ -1,0 +1,8 @@
+apiVersion: v2
+name: snyk-runtime-sensor
+version: v1.9.6
+description: Snyk Runtime Sensor Helm chart
+type: application
+sources:
+  - https://github.com/snyk/runtime-sensor
+appVersion: 0.0.1

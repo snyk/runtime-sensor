@@ -1,0 +1,311 @@
+{
+    "$schema": "https://json-schema.org/draft/2019-09/schema",
+    "$id": "http://example.com/example.json",
+    "type": "object",
+    "default": {},
+    "title": "Root Schema",
+    "required": [
+        "secretName",
+        "clusterName",
+        "snykGroupId",
+        "replicaCount",
+        "nameOverride",
+        "sensor"
+    ],
+    "properties": {
+        "secretName": {
+            "default": "snyk-secret",
+            "type": "string",
+            "title": "The name of the secret which contains the token for Snyk",
+            "examples": [
+                "snyk-secret", "my-secret"
+            ]
+        },
+        "replicaCount": {
+            "type": "integer",
+            "default": 0,
+            "title": "The replicaCount Schema",
+            "examples": [
+                1
+            ]
+        },
+        "nameOverride": {
+            "type": "string",
+            "default": "",
+            "title": "The nameOverride Schema",
+            "examples": [
+                ""
+            ]
+        },
+        "clusterName": {
+            "type": "string",
+            "default": "",
+            "title": "The Snyk environment",
+            "examples": [
+                "aws-staging", "gcp-production"
+            ]
+        },
+        "snykGroupId": {
+            "type": "string",
+            "pattern": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",
+            "default": "",
+            "title": "The Snyk Group ID",
+            "examples": [
+                "ffffffff-ffff-ffff-ffff-fffffffffffff", "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaaa"
+            ]
+        },
+        "sensor": {
+            "type": "object",
+            "default": {},
+            "title": "The sensor Schema",
+            "required": [
+                "image",
+                "resources",
+                "serviceAccount",
+                "extraArgs"
+            ],
+            "properties": {
+                "image": {
+                    "type": "object",
+                    "default": {},
+                    "title": "The image Schema",
+                    "required": [
+                        "repository"
+                    ],
+                    "properties": {
+                        "repository": {
+                            "type": "string",
+                            "default": "",
+                            "title": "The repository Schema",
+                            "examples": [
+                                "gcr.io/snyk-main/runtime-sensor"
+                            ]
+                        },
+                        "tag": {
+                            "type": "string",
+                            "default": "",
+                            "title": "The tag Schema",
+                            "examples": [
+                                "0.0.1"
+                            ]
+                        }
+                    },
+                    "examples": [{
+                        "repository": "gcr.io/snyk-main/runtime-sensor",
+                        "tag": "0.0.1"
+                    }]
+                },
+                "resources": {
+                    "type": "object",
+                    "default": {},
+                    "title": "The resources Schema",
+                    "required": [
+                        "requests"
+                    ],
+                    "properties": {
+                        "limits": {
+                            "type": "object",
+                            "default": {},
+                            "title": "The limits Schema",
+                            "required": [
+                                "cpu",
+                                "memory"
+                            ],
+                            "properties": {
+                                "cpu": {
+                                    "type": "string",
+                                    "default": "",
+                                    "title": "The cpu Schema",
+                                    "examples": [
+                                        "100m"
+                                    ]
+                                },
+                                "memory": {
+                                    "type": "string",
+                                    "default": "",
+                                    "title": "The memory Schema",
+                                    "examples": [
+                                        "128Mi"
+                                    ]
+                                }
+                            },
+                            "examples": [{
+                                "cpu": "100m",
+                                "memory": "128Mi"
+                            }]
+                        },
+                        "requests": {
+                            "type": "object",
+                            "default": {},
+                            "title": "The requests Schema",
+                            "required": [
+                                "cpu",
+                                "memory"
+                            ],
+                            "properties": {
+                                "cpu": {
+                                    "type": "string",
+                                    "default": "",
+                                    "title": "The cpu Schema",
+                                    "examples": [
+                                        "100m"
+                                    ]
+                                },
+                                "memory": {
+                                    "type": "string",
+                                    "default": "",
+                                    "title": "The memory Schema",
+                                    "examples": [
+                                        "64Mi"
+                                    ]
+                                }
+                            },
+                            "examples": [{
+                                "cpu": "100m",
+                                "memory": "64Mi"
+                            }]
+                        }
+                    },
+                    "examples": [{
+                        "limits": {
+                            "cpu": "100m",
+                            "memory": "128Mi"
+                        },
+                        "requests": {
+                            "cpu": "100m",
+                            "memory": "64Mi"
+                        }
+                    }]
+                },
+                "serviceAccount": {
+                    "type": "object",
+                    "default": {},
+                    "title": "The serviceAccount Schema",
+                    "required": [
+                        "create"
+                    ],
+                    "properties": {
+                        "create": {
+                            "type": "boolean",
+                            "default": false,
+                            "title": "The create Schema",
+                            "examples": [
+                                true
+                            ]
+                        },
+                        "annotations": {
+                          "type": "object"
+                        }
+                    },
+                    "examples": [{
+                        "create": true
+                    }]
+                },
+                "podAnnotations": {
+                  "type": "object"
+                },
+                "extraArgs": {
+                    "type": "array",
+                    "default": [],
+                    "title": "The extraArgs Schema",
+                    "items": {},
+                    "examples": [
+                        []
+                    ]
+                }
+            },
+            "examples": [{
+                "image": {
+                    "repository": "gcr.io/snyk-main/runtime-sensor",
+                    "tag": "0.0.1"
+                },
+                "resources": {
+                    "limits": {
+                        "cpu": "100m",
+                        "memory": "128Mi"
+                    },
+                    "requests": {
+                        "cpu": "100m",
+                        "memory": "64Mi"
+                    }
+                },
+                "serviceAccount": {
+                    "create": true
+                },
+                "extraArgs": []
+            }]
+        },
+        "role": {
+            "type": "object",
+            "default": {},
+            "title": "The role Schema",
+            "required": [
+                "create"
+            ],
+            "properties": {
+                "create": {
+                    "type": "boolean",
+                    "default": false,
+                    "title": "The create Schema",
+                    "examples": [
+                        true
+                    ]
+                }
+            },
+            "examples": [{
+                "create": true
+            }]
+        },
+        "clusterRole": {
+            "type": "object",
+            "default": {},
+            "title": "The clusterRole Schema",
+            "required": [
+                "create"
+            ],
+            "properties": {
+                "create": {
+                    "type": "boolean",
+                    "default": false,
+                    "title": "The create Schema",
+                    "examples": [
+                        true
+                    ]
+                }
+            },
+            "examples": [{
+                "create": true
+            }]
+        }
+    },
+    "examples": [{
+        "replicaCount": 1,
+        "nameOverride": "",
+        "sensor": {
+            "image": {
+                "repository": "gcr.io/snyk-main/runtime-sensor",
+                "tag": "0.0.1"
+            },
+            "resources": {
+                "limits": {
+                    "cpu": "100m",
+                    "memory": "128Mi"
+                },
+                "requests": {
+                    "cpu": "100m",
+                    "memory": "64Mi"
+                }
+            },
+            "serviceAccount": {
+                "create": true
+            },
+            "extraArgs": []
+        },
+        "role": {
+            "create": true
+        },
+        "clusterRole": {
+            "create": true
+        }
+    }]
+}
