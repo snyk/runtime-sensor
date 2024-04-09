@@ -26,10 +26,7 @@ workflows:
           context:
             - snyk-bot-slack
           channel: runtime-rnd
-          filters:
-            branches:
-              only:
-                - main
+          trusted-branch: main
       - security_scans:
           name: Security Scans
           context:
