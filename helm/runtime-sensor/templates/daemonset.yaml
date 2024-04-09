@@ -1,0 +1,110 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  labels:
+    {{- include "snyk-runtime-sensor.labels" . | nindent 4 }}
+    control-plane: snyk-runtime-sensor
+  name: {{ template "snyk-runtime-sensor.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "snyk-runtime-sensor.selectorLabels" . | nindent 6 }}
+      control-plane: snyk-runtime-sensor
+  template:
+    metadata:
+      annotations:
+        snyk/snyk-runtime-sensor: "true"
+      labels:
+        {{- include "snyk-runtime-sensor.selectorLabels" . | nindent 8 }}
+        {{- include "snyk-runtime-sensor.podLabels" . | nindent 8 }}
+        control-plane: snyk-runtime-sensor
+    spec:
+      # This toleration makes sure we run on any node, regardless of taints
+      tolerations:
+        - operator: Exists
+      {{- if and .Values.imagePullSecret }}
+      imagePullSecrets:
+        - name: "{{ .Values.imagePullSecret }}"
+      {{- end }}
+      containers:
+        - name: snyk-runtime-sensor
+          imagePullPolicy: IfNotPresent
+          {{- if .Values.sensor.extraArgs }}
+          args:
+            {{- .Values.sensor.extraArgs | toYaml | nindent 12 }}
+          {{-  end  }}
+          {{- if and .Values.sensor.image.repository .Values.sensor.image.tag }}
+          image: "{{ .Values.sensor.image.repository }}:{{ .Values.sensor.image.tag | default .Chart.AppVersion }}"
+          {{- else }}
+          image: "{{ .Values.sensor.image.repository }}"
+          {{- end }}
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "50m"
+            limits:
+              memory: "512Mi"
+              cpu: "250m"
+          securityContext:
+            {{- if .Values.securityContext.privileged }}
+            privileged: true
+            {{- else }}
+            capabilities:
+              add:
+              {{- with .Values.securityContext.capabilities }}
+              {{- toYaml . | nindent 16 }}
+              {{- end }}
+              drop:
+                - ALL
+            {{- end }}
+          volumeMounts:
+            - name: boot-host
+              mountPath: /boot.host
+              readOnly: true
+            - name: sysfs
+              mountPath: /sys
+              readOnly: true
+          env:
+            - name: SNYK_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ required "A secretName is required! Please provide a value" .Values.secretName }}
+                  key: "snykToken"
+            - name: CLUSTER_NAME
+              value: "{{ .Values.clusterName }}"
+            - name: SNYK_GROUP_ID
+              value: "{{ .Values.snykGroupId }}"
+            - name: HELIOS_MODE
+              value: "{{ .Values.heliosMode }}"
+            - name: TEMP_VALUE
+              value: temp
+            - name: RUNTIME_COLLECTOR_ENDPOINT
+            {{- if .Values.sensor.runtimeCollectorEndpoint }}
+              value: "{{ .Values.sensor.runtimeCollectorEndpoint }}"
+            {{- else }}
+              valueFrom:
+                  configMapKeyRef:
+                    name: e2e-config
+                    key: runtime_collector_endpoint
+                    optional: true
+            {{- end }}
+            - name: RUNTIME_COLLECTOR_INSECURE
+            {{- if .Values.sensor.runtimeCollectorInsecure }}
+              value: {{ .Values.sensor.runtimeCollectorInsecure }}
+            {{- else }}
+              valueFrom:
+                  configMapKeyRef:
+                    name: e2e-config
+                    key: runtime_collector_insecure
+                    optional: true
+            {{- end }}
+      hostPID: true
+      serviceAccountName: {{ template "snyk-runtime-sensor.serviceAccountName" . }}
+      volumes:
+        - name: boot-host
+          hostPath:
+            path: /
+        - name: sysfs
+          hostPath:
+            path: /sys

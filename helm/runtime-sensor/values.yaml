@@ -1,0 +1,63 @@
+# Default values for snyk-runtime-sensor.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+## Provide a name in place of snyk-runtime-sensor.
+##
+nameOverride: ""
+
+clusterName: "dev"
+snykGroupId: "ffffffff-ffff-ffff-ffff-fffffffffffff"
+heliosMode: false
+
+### Provide the name of the secret
+secretName: snyk-secret
+
+## Provide Snyk runtime sensor container image and resources.
+sensor:
+  image:
+    repository: gcr.io/snyk-main/runtime-sensor
+  resources:
+    requests:
+      cpu: 100m
+      memory: 64Mi
+
+  # -- Create the manager ServiceAccount
+  serviceAccount:
+    create: true
+    annotations: {}
+    # name: nameOverride
+
+  podAnnotations: {}
+  podLabels: {}
+
+  ## List of additional cli arguments to configure the manager
+  ## for example: --labels, etc.
+  extraArgs: []
+
+## Create the provided Roles and RoleBindings
+##
+role:
+  create: true
+
+## Create the provided ClusterRoles and ClusterRoleBindings
+##
+clusterRole:
+  create: true
+
+securityContext:
+  # -- Run the pod with elevated privileges
+  privileged: false
+  # -- Capabilities for the `snyk-runtime-sensor` container
+  capabilities:
+    # Basic requirements for eBPF
+    - BPF
+    - PERFMON
+    - SYS_RESOURCE
+    # Determine if packages are loaded
+    - DAC_READ_SEARCH
+    - SYS_PTRACE
+    # Determine pod networking patterns
+    - NET_ADMIN

@@ -1,0 +1,17 @@
+{{- if .Values.clusterRole.create }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    {{- include "snyk-runtime-sensor.labels" . | nindent 4 }}
+  name: {{ template "snyk-runtime-sensor.fullname" . }}-rolebinding
+  namespace: {{ .Release.Namespace }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ template "snyk-runtime-sensor.fullname" . }}-role
+subjects:
+  - kind: ServiceAccount
+    name: {{ template "snyk-runtime-sensor.serviceAccountName" . }}
+    namespace: {{ .Release.Namespace }}
+{{- end }}
