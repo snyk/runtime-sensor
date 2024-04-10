@@ -2,23 +2,23 @@ apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   labels:
-    {{- include "snyk-runtime-sensor.labels" . | nindent 4 }}
-    control-plane: snyk-runtime-sensor
-  name: {{ template "snyk-runtime-sensor.fullname" . }}
+    {{- include "runtime-sensor.labels" . | nindent 4 }}
+    control-plane: runtime-sensor
+  name: {{ template "runtime-sensor.fullname" . }}
   namespace: {{ .Release.Namespace }}
 spec:
   selector:
     matchLabels:
-      {{- include "snyk-runtime-sensor.selectorLabels" . | nindent 6 }}
-      control-plane: snyk-runtime-sensor
+      {{- include "runtime-sensor.selectorLabels" . | nindent 6 }}
+      control-plane: runtime-sensor
   template:
     metadata:
       annotations:
-        snyk/snyk-runtime-sensor: "true"
+        snyk/runtime-sensor: "true"
       labels:
-        {{- include "snyk-runtime-sensor.selectorLabels" . | nindent 8 }}
-        {{- include "snyk-runtime-sensor.podLabels" . | nindent 8 }}
-        control-plane: snyk-runtime-sensor
+        {{- include "runtime-sensor.selectorLabels" . | nindent 8 }}
+        {{- include "runtime-sensor.podLabels" . | nindent 8 }}
+        control-plane: runtime-sensor
     spec:
       # This toleration makes sure we run on any node, regardless of taints
       tolerations:
@@ -28,7 +28,7 @@ spec:
         - name: "{{ .Values.imagePullSecret }}"
       {{- end }}
       containers:
-        - name: snyk-runtime-sensor
+        - name: runtime-sensor
           imagePullPolicy: IfNotPresent
           {{- if .Values.sensor.extraArgs }}
           args:
@@ -100,7 +100,7 @@ spec:
                     optional: true
             {{- end }}
       hostPID: true
-      serviceAccountName: {{ template "snyk-runtime-sensor.serviceAccountName" . }}
+      serviceAccountName: {{ template "runtime-sensor.serviceAccountName" . }}
       volumes:
         - name: boot-host
           hostPath:

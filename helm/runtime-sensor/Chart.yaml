@@ -1,6 +1,6 @@
 apiVersion: v2
-name: snyk-runtime-sensor
-version: v1.9.6
+name: runtime-sensor
+version: v1.12.0
 description: Snyk Runtime Sensor Helm chart
 type: application
 sources:
