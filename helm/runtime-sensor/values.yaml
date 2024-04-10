@@ -1,10 +1,10 @@
-# Default values for snyk-runtime-sensor.
+# Default values for runtime-sensor.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
 replicaCount: 1
 
-## Provide a name in place of snyk-runtime-sensor.
+## Provide a name in place of runtime-sensor.
 ##
 nameOverride: ""
 
@@ -50,7 +50,7 @@ clusterRole:
 securityContext:
   # -- Run the pod with elevated privileges
   privileged: false
-  # -- Capabilities for the `snyk-runtime-sensor` container
+  # -- Capabilities for the `runtime-sensor` container
   capabilities:
     # Basic requirements for eBPF
     - BPF

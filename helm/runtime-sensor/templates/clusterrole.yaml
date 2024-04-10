@@ -3,8 +3,8 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   labels:
-    {{- include "snyk-runtime-sensor.labels" . | nindent 4 }}
-  name: {{ template "snyk-runtime-sensor.fullname" . }}-role
+    {{- include "runtime-sensor.labels" . | nindent 4 }}
+  name: {{ template "runtime-sensor.fullname" . }}-role
   namespace: {{ .Release.Namespace }}
 rules:
   - apiGroups:
@@ -18,6 +18,9 @@ rules:
   - apiGroups:
       - "apps"
     resources:
+      - deployments
+      - daemonsets
+      - statefulsets
       - replicasets
     verbs:
       - get
