@@ -22,16 +22,16 @@ The service account must have one of the following roles:
 To install Snyk's runtime sensor using Helm Charts follow these steps:
 
 1. Make sure Helm is installed
-2. Create the `snyk-runtime-sensor` namespace:
+2. Create the namespace you would like to install the sensor in, for example `snyk-runtime-sensor`:
 
    ```
-   kubectl create namespace snyk-runtime-sensor
+   kubectl create namespace <<YOUR_NAMESPACE>>
    ```
 
 3. Create a secret with your service account token which has the appropriate permissions under the created namespace:
 
    ```
-   kubectl create secret generic <<YOUR_SECRET_NAME>> --from-literal=snykToken=<<YOUR_TOKEN>> -n snyk-runtime-sensor
+   kubectl create secret generic <<YOUR_SECRET_NAME>> --from-literal=snykToken=<<YOUR_TOKEN>> -n <<YOUR_NAMESPACE>>
    ```
 
 4. Add the Helm repo
@@ -47,7 +47,7 @@ To install Snyk's runtime sensor using Helm Charts follow these steps:
    --set secretName=<<YOUR_SECRET_NAME>> \
    --set clusterName=<<CLUSTER_NAME>> \
    --set snykGroupId=<<YOUR_GROUP_ID>> \
-   -n snyk-runtime-sensor \
+   -n <<YOUR_NAMESPACE>> \
    runtime-sensor/runtime-sensor
    ```
 
