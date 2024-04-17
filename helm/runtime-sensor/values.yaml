@@ -18,7 +18,7 @@ secretName: snyk-secret
 ## Provide Snyk runtime sensor container image and resources.
 sensor:
   image:
-    repository: gcr.io/snyk-main/runtime-sensor
+    repository: snyk/runtime-sensor
   resources:
     requests:
       cpu: 100m
