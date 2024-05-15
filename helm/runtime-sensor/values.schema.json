@@ -60,7 +60,6 @@
             "title": "The sensor Schema",
             "required": [
                 "image",
-                "resources",
                 "serviceAccount",
                 "extraArgs"
             ],
@@ -93,88 +92,6 @@
                     "examples": [{
                         "repository": "gcr.io/snyk-main/runtime-sensor",
                         "tag": "0.0.1"
-                    }]
-                },
-                "resources": {
-                    "type": "object",
-                    "default": {},
-                    "title": "The resources Schema",
-                    "required": [
-                        "requests"
-                    ],
-                    "properties": {
-                        "limits": {
-                            "type": "object",
-                            "default": {},
-                            "title": "The limits Schema",
-                            "required": [
-                                "cpu",
-                                "memory"
-                            ],
-                            "properties": {
-                                "cpu": {
-                                    "type": "string",
-                                    "default": "",
-                                    "title": "The cpu Schema",
-                                    "examples": [
-                                        "100m"
-                                    ]
-                                },
-                                "memory": {
-                                    "type": "string",
-                                    "default": "",
-                                    "title": "The memory Schema",
-                                    "examples": [
-                                        "128Mi"
-                                    ]
-                                }
-                            },
-                            "examples": [{
-                                "cpu": "100m",
-                                "memory": "128Mi"
-                            }]
-                        },
-                        "requests": {
-                            "type": "object",
-                            "default": {},
-                            "title": "The requests Schema",
-                            "required": [
-                                "cpu",
-                                "memory"
-                            ],
-                            "properties": {
-                                "cpu": {
-                                    "type": "string",
-                                    "default": "",
-                                    "title": "The cpu Schema",
-                                    "examples": [
-                                        "100m"
-                                    ]
-                                },
-                                "memory": {
-                                    "type": "string",
-                                    "default": "",
-                                    "title": "The memory Schema",
-                                    "examples": [
-                                        "64Mi"
-                                    ]
-                                }
-                            },
-                            "examples": [{
-                                "cpu": "100m",
-                                "memory": "64Mi"
-                            }]
-                        }
-                    },
-                    "examples": [{
-                        "limits": {
-                            "cpu": "100m",
-                            "memory": "128Mi"
-                        },
-                        "requests": {
-                            "cpu": "100m",
-                            "memory": "64Mi"
-                        }
                     }]
                 },
                 "serviceAccount": {

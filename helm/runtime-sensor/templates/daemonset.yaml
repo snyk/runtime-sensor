@@ -41,11 +41,11 @@ spec:
           {{- end }}
           resources:
             requests:
-              memory: "256Mi"
-              cpu: "50m"
-            limits:
               memory: "512Mi"
-              cpu: "250m"
+              cpu: "100m"
+            limits:
+              memory: "1024Mi"
+              cpu: "500m"
           securityContext:
             {{- if .Values.securityContext.privileged }}
             privileged: true
@@ -75,30 +75,10 @@ spec:
               value: "{{ .Values.clusterName }}"
             - name: SNYK_GROUP_ID
               value: "{{ .Values.snykGroupId }}"
-            - name: HELIOS_MODE
-              value: "{{ .Values.heliosMode }}"
-            - name: TEMP_VALUE
-              value: temp
-            - name: RUNTIME_COLLECTOR_ENDPOINT
-            {{- if .Values.sensor.runtimeCollectorEndpoint }}
-              value: "{{ .Values.sensor.runtimeCollectorEndpoint }}"
-            {{- else }}
-              valueFrom:
-                  configMapKeyRef:
-                    name: e2e-config
-                    key: runtime_collector_endpoint
-                    optional: true
-            {{- end }}
-            - name: RUNTIME_COLLECTOR_INSECURE
-            {{- if .Values.sensor.runtimeCollectorInsecure }}
-              value: {{ .Values.sensor.runtimeCollectorInsecure }}
-            {{- else }}
-              valueFrom:
-                  configMapKeyRef:
-                    name: e2e-config
-                    key: runtime_collector_insecure
-                    optional: true
-            {{- end }}
+          envFrom:
+          - configMapRef:
+              name: env-config-map
+              optional: true
       hostPID: true
       serviceAccountName: {{ template "runtime-sensor.serviceAccountName" . }}
       volumes:
