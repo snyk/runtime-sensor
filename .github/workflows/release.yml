@@ -20,12 +20,18 @@ jobs:
         with:
             fallback: v1.22.1
 
+      - name: Get version
+        id: get-version
+        run: |
+          tag=${{ steps.get-tag.outputs.tag }}
+          echo "version=${tag#*-}" >> $GITHUB_OUTPUT
+
       - name: Set Helm chart version from tag
         uses: mikefarah/yq@master
         with:
           cmd: |
-            yq e -i '.version = "${{ steps.get-tag.outputs.tag }}"' ./helm/runtime-sensor/Chart.yaml
-            yq e -i '.sensor.image.tag = "${{ steps.get-tag.outputs.tag }}"' ./helm/runtime-sensor/values.yaml
+            yq e -i '.version = "${{ steps.get-version.outputs.version }}"' ./helm/runtime-sensor/Chart.yaml
+            yq e -i '.sensor.image.tag = "${{ steps.get-version.outputs.version }}"' ./helm/runtime-sensor/values.yaml
 
       - name: Configure Git
         run: |
