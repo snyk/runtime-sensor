@@ -24,7 +24,7 @@ jobs:
         id: get-version
         run: |
           tag=${{ steps.get-tag.outputs.tag }}
-          echo "version=${tag#*-}" >> $GITHUB_OUTPUT
+          echo "version=${tag##*-}" >> $GITHUB_OUTPUT
 
       - name: Set Helm chart version from tag
         uses: mikefarah/yq@master
