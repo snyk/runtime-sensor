@@ -14,8 +14,6 @@ Initially you need to create a Kubernetes secret that contains the API token for
 [service account](https://docs.snyk.io/snyk-admin/service-accounts)
 
 The service account must have one of the following roles:
-
-- Org Admin
 - Group Admin
 - Custom Role with "AppRisk edit" permission
 
