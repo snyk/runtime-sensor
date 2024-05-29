@@ -41,11 +41,11 @@ spec:
           {{- end }}
           resources:
             requests:
-              memory: "512Mi"
-              cpu: "100m"
+              memory: "{{ .Values.sensor.resources.requests.memory }}"
+              cpu: "{{ .Values.sensor.resources.requests.cpu }}"
             limits:
-              memory: "1024Mi"
-              cpu: "500m"
+              memory: "{{ .Values.sensor.resources.limits.memory }}"
+              cpu: "{{ .Values.sensor.resources.limits.cpu }}"
           securityContext:
             {{- if .Values.securityContext.privileged }}
             privileged: true
@@ -75,6 +75,8 @@ spec:
               value: "{{ .Values.clusterName }}"
             - name: SNYK_GROUP_ID
               value: "{{ .Values.snykGroupId }}"
+            - name: SNYK_API_BASE_URL
+              value: "{{ .Values.snykAPIBaseURL }}"
           envFrom:
           - configMapRef:
               name: env-config-map
