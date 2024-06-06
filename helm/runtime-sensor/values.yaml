@@ -8,6 +8,7 @@ replicaCount: 1
 nameOverride: ""
 clusterName: "dev"
 snykGroupId: "ffffffff-ffff-ffff-ffff-fffffffffffff"
+snykAPIBaseURL: api.snyk.io:443
 ### Provide the name of the secret
 secretName: snyk-secret
 ## Provide Snyk runtime sensor container image and resources.
@@ -15,6 +16,13 @@ sensor:
   image:
     repository: snyk/runtime-sensor
   # -- Create the manager ServiceAccount
+  resources:
+    requests:
+      memory: 512Mi
+      cpu: 100m
+    limits:
+      memory: 1024Mi
+      cpu: 500m
   serviceAccount:
     create: true
     annotations: {}

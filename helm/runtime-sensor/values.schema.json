@@ -8,6 +8,7 @@
         "secretName",
         "clusterName",
         "snykGroupId",
+        "snykAPIBaseURL",
         "replicaCount",
         "nameOverride",
         "sensor"
@@ -54,12 +55,21 @@
                 "ffffffff-ffff-ffff-ffff-fffffffffffff", "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaaa"
             ]
         },
+        "snykAPIBaseURL": {
+            "type": "string",
+            "default": "api.snyk.io:443",
+            "title": "The Snyk API region and port to report to",
+            "examples": [
+                "api.snyk.io:443", "api.us.snyk.io:443"
+            ]
+        },
         "sensor": {
             "type": "object",
             "default": {},
             "title": "The sensor Schema",
             "required": [
                 "image",
+                "resources",
                 "serviceAccount",
                 "extraArgs"
             ],
@@ -74,15 +84,15 @@
                     "properties": {
                         "repository": {
                             "type": "string",
-                            "default": "",
+                            "default": "snyk/runtime-sensor",
                             "title": "The repository Schema",
                             "examples": [
-                                "gcr.io/snyk-main/runtime-sensor"
+                                "snyk/runtime-sensor"
                             ]
                         },
                         "tag": {
                             "type": "string",
-                            "default": "",
+                            "default": "1.0.0",
                             "title": "The tag Schema",
                             "examples": [
                                 "0.0.1"
@@ -90,8 +100,90 @@
                         }
                     },
                     "examples": [{
-                        "repository": "gcr.io/snyk-main/runtime-sensor",
+                        "repository": "snyk/runtime-sensor",
                         "tag": "0.0.1"
+                    }]
+                },
+                "resources": {
+                    "type": "object",
+                    "default": {},
+                    "title": "The resources Schema",
+                    "required": [
+                        "requests"
+                    ],
+                    "properties": {
+                        "limits": {
+                            "type": "object",
+                            "default": {},
+                            "title": "The limits Schema",
+                            "required": [
+                                "cpu",
+                                "memory"
+                            ],
+                            "properties": {
+                                "cpu": {
+                                    "type": "string",
+                                    "default": "500m",
+                                    "title": "The cpu Schema",
+                                    "examples": [
+                                        "500m"
+                                    ]
+                                },
+                                "memory": {
+                                    "type": "string",
+                                    "default": "1024Mi",
+                                    "title": "The memory Schema",
+                                    "examples": [
+                                        "1024Mi"
+                                    ]
+                                }
+                            },
+                            "examples": [{
+                                "cpu": "100m",
+                                "memory": "128Mi"
+                            }]
+                        },
+                        "requests": {
+                            "type": "object",
+                            "default": {},
+                            "title": "The requests Schema",
+                            "required": [
+                                "cpu",
+                                "memory"
+                            ],
+                            "properties": {
+                                "cpu": {
+                                    "type": "string",
+                                    "default": "100m",
+                                    "title": "The cpu Schema",
+                                    "examples": [
+                                        "100m"
+                                    ]
+                                },
+                                "memory": {
+                                    "type": "string",
+                                    "default": "512Mi",
+                                    "title": "The memory Schema",
+                                    "examples": [
+                                        "64Mi"
+                                    ]
+                                }
+                            },
+                            "examples": [{
+                                "cpu": "100m",
+                                "memory": "512Mi"
+                            }]
+                        }
+                    },
+                    "examples": [{
+                        "limits": {
+                            "cpu": "100m",
+                            "memory": "128Mi"
+                        },
+                        "requests": {
+                            "cpu": "100m",
+                            "memory": "64Mi"
+                        }
                     }]
                 },
                 "serviceAccount": {
@@ -133,8 +225,8 @@
             },
             "examples": [{
                 "image": {
-                    "repository": "gcr.io/snyk-main/runtime-sensor",
-                    "tag": "0.0.1"
+                    "repository": "snyk/runtime-sensor",
+                    "tag": "1.0.0"
                 },
                 "resources": {
                     "limits": {
@@ -162,7 +254,7 @@
             "properties": {
                 "create": {
                     "type": "boolean",
-                    "default": false,
+                    "default": true,
                     "title": "The create Schema",
                     "examples": [
                         true
@@ -200,7 +292,7 @@
         "nameOverride": "",
         "sensor": {
             "image": {
-                "repository": "gcr.io/snyk-main/runtime-sensor",
+                "repository": "snyk/runtime-sensor",
                 "tag": "0.0.1"
             },
             "resources": {
