@@ -7,13 +7,13 @@ and will send collected data to Snyk.
 
 ### Installation
 
-
 There is a [Helm chart](https://helm.sh) within this repo in [helm/runtime-sensor](https://github.com/snyk/runtime-sensor), that is hosted through Github pages in `https://snyk.github.io/runtime-sensor`.
 
 Initially you need to create a Kubernetes secret that contains the API token for the
 [service account](https://docs.snyk.io/snyk-admin/service-accounts)
 
 The service account must have one of the following roles:
+
 - Group Admin
 - Custom Role with "AppRisk edit" permission
 
@@ -50,3 +50,28 @@ To install Snyk's runtime sensor using Helm Charts follow these steps:
    ```
 
 Release versions can be found [in GitHub](https://github.com/snyk/runtime-sensor/releases).
+
+#### upgrading to latest version
+
+1. Check the name that was given to the sensor
+
+```
+helm repo list
+```
+
+2. Update the repo (with the name from (1))
+
+```
+helm repo update <SENSOR REPO NAME>
+```
+
+3. Upgrade installation
+
+```
+helm upgrade --install <<SENSOR_REPO_NAME>> \
+   --set secretName=<<YOUR_SECRET_NAME>>  \
+   --set clusterName=<<CLUSTER_NAME>> \
+   --set snykGroupId=<<YOUR_GROUP_ID>>  \
+   -n <<YOUR_NAMESPACE>> \
+   runtime-sensor/runtime-sensor
+```
