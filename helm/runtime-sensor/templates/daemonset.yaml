@@ -15,14 +15,18 @@ spec:
     metadata:
       annotations:
         snyk/runtime-sensor: "true"
+        {{- include "runtime-sensor.podAnnotations" . | nindent 8 }}
       labels:
         {{- include "runtime-sensor.selectorLabels" . | nindent 8 }}
         {{- include "runtime-sensor.podLabels" . | nindent 8 }}
         control-plane: runtime-sensor
     spec:
-      # This toleration makes sure we run on any node, regardless of taints
       tolerations:
+      {{- if and .Values.tolerations }}
+        {{- .Values.tolerations | toYaml | nindent 8 }}
+      {{- else }}
         - operator: Exists
+      {{- end }}
       {{- if and .Values.imagePullSecret }}
       imagePullSecrets:
         - name: "{{ .Values.imagePullSecret }}"
@@ -65,18 +69,27 @@ spec:
             - name: sysfs
               mountPath: /sys
               readOnly: true
+            {{- include "runtime-sensor.additionalVolumeMounts" . | nindent 12 }}
           env:
             - name: SNYK_TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: {{ required "A secretName is required! Please provide a value" .Values.secretName }}
+                  name: {{ required "A snykToken is required! Please provide a value" .Values.secretName }}
                   key: "snykToken"
+            - name: GROUPS_SCOPES
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secretName }}
+                  key: "groupsScopes"
+                  optional: true
             - name: CLUSTER_NAME
               value: "{{ .Values.clusterName }}"
             - name: SNYK_GROUP_ID
               value: "{{ .Values.snykGroupId }}"
             - name: SNYK_API_BASE_URL
               value: "{{ .Values.snykAPIBaseURL }}"
+            - name: SNYK_DEBUG
+              value: "{{ .Values.debug }}"
           envFrom:
           - configMapRef:
               name: env-config-map
@@ -90,3 +103,4 @@ spec:
         - name: sysfs
           hostPath:
             path: /sys
+        {{- include "runtime-sensor.additionalVolumes" . | nindent 8 }}
