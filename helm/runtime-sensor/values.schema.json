@@ -9,7 +9,6 @@
         "clusterName",
         "snykGroupId",
         "snykAPIBaseURL",
-        "replicaCount",
         "nameOverride",
         "sensor"
     ],
@@ -22,12 +21,12 @@
                 "snyk-secret", "my-secret"
             ]
         },
-        "replicaCount": {
-            "type": "integer",
-            "default": 0,
-            "title": "The replicaCount Schema",
+        "secretProvider": {
+            "default": "none",
+            "type": "string",
+            "title": "Use a different provider to pull the snyk-secret from",
             "examples": [
-                1
+                "aws", "none"
             ]
         },
         "nameOverride": {
@@ -288,7 +287,6 @@
         }
     },
     "examples": [{
-        "replicaCount": 1,
         "nameOverride": "",
         "sensor": {
             "image": {

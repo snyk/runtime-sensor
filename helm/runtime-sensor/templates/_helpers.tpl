@@ -62,3 +62,26 @@ Create the name of the service account to use
 {{- .Values.sensor.podLabels | toYaml }}
 {{- end }}
 {{- end }}
+
+{{- define "runtime-sensor.additionalVolumes" -}}
+{{- if .Values.secretProvider }}
+{{- if eq .Values.secretProvider "aws" }}
+- name: secrets-store-inline
+  csi:
+    driver: secrets-store.csi.k8s.io
+    readOnly: true
+    volumeAttributes:
+      secretProviderClass: {{ include "runtime-sensor.name" . }}-aws-secrets
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{- define "runtime-sensor.additionalVolumeMounts" -}}
+{{- if .Values.secretProvider }}
+{{- if eq .Values.secretProvider "aws" }}
+- name: secrets-store-inline
+  mountPath: "/mnt/secrets-store"
+  readOnly: true
+{{- end }}
+{{- end }}
+{{- end }}
