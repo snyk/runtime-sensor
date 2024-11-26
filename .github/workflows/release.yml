@@ -13,38 +13,39 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Get Latest Tag
-        id: get-tag
-        uses: WyriHaximus/github-action-get-previous-tag@v1.4.0
         with:
-            fallback: v1.22.1
-
-      - name: Get version
-        id: get-version
-        run: |
-          tag=${{ steps.get-tag.outputs.tag }}
-          echo "version=${tag##*-}" >> $GITHUB_OUTPUT
-
-      - name: Set Helm chart version from tag
-        uses: mikefarah/yq@master
-        with:
-          cmd: |
-            yq e -i '.version = "${{ steps.get-version.outputs.version }}"' ./helm/runtime-sensor/Chart.yaml
-            yq e -i '.sensor.image.tag = "${{ steps.get-version.outputs.version }}"' ./helm/runtime-sensor/values.yaml
+          ref: gh-pages
 
       - name: Configure Git
         run: |
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
-      
-      - name: Install Helm
-        uses: azure/setup-helm@v3
 
-      - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.6.0
-        with:
-          skip_existing: true
-          charts_dir: helm
+      - name: Install Chart Releaser and run upload
+        run: |
+          if [[ ! -d "$RUNNER_TOOL_CACHE" ]]; then
+            echo "Cache directory '$RUNNER_TOOL_CACHE' does not exist" >&2
+            exit 1
+          fi
+
+          arch=$(uname -m)
+          cr_version="v1.6.1"
+          install_dir="$RUNNER_TOOL_CACHE/cr/$cr_version/$arch"
+
+          mkdir -p "$install_dir"
+
+          echo "Installing chart-releaser on $install_dir..."
+          curl -sSLo cr.tar.gz "https://github.com/helm/chart-releaser/releases/download/$cr_version/chart-releaser_${cr_version#v}_linux_amd64.tar.gz"
+          tar -xzf cr.tar.gz -C "$install_dir"
+          rm -f cr.tar.gz
+
+          echo 'Adding cr directory to PATH...'
+          export PATH="$install_dir:$PATH"
+
+          echo "Uploading chart index..."
+          cr upload --owner snyk --git-repo runtime-sensor --packages-with-index --push --skip-existing
+
+          echo 'Updating charts index...'
+          cr index --owner snyk --git-repo runtime-sensor --push --packages-with-index --index-path .
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
