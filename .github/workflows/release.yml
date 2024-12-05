@@ -18,7 +18,7 @@ jobs:
         id: get-tag
         uses: WyriHaximus/github-action-get-previous-tag@v1.4.0
         with:
-            fallback: v1.22.1
+            fallback: v1.69.0
 
       - name: Get version
         id: get-version
@@ -31,7 +31,6 @@ jobs:
         with:
           cmd: |
             yq e -i '.version = "${{ steps.get-version.outputs.version }}"' ./helm/runtime-sensor/Chart.yaml
-            yq e -i '.sensor.image.tag = "${{ steps.get-version.outputs.version }}"' ./helm/runtime-sensor/values.yaml
 
       - name: Configure Git
         run: |
