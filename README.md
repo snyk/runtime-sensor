@@ -11,7 +11,7 @@ This is a [Helm chart](https://helm.sh) dedicated repo [helm/runtime-sensor](htt
 
 Please find the installation instructions under Snyk's docs - https://docs.snyk.io/manage-risk/snyk-apprisk/integrations-for-snyk-apprisk/snyk-runtime-sensor.
 
-Release versions can be found [in GitHub](https://github.com/snyk/runtime-sensor/releases).
+Released versions can be found in the [Releases](https://github.com/snyk/runtime-sensor/releases) page.
 
 In order to examine the full list of configurable values and have more control over the installation of the sensor, download the Helm repository and check out the `values.yaml` file:
 
