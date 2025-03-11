@@ -3,6 +3,18 @@ entries:
   runtime-sensor:
   - apiVersion: v2
     appVersion: 0.0.1
+    created: "2025-03-11T13:02:03.275761422Z"
+    description: Snyk Runtime Sensor Helm chart
+    digest: 63188856c7e2fc1d01fd09c93ff2ed150ec9d5065d49e873a72d5359675b1fc7
+    name: runtime-sensor
+    sources:
+    - https://github.com/snyk/runtime-sensor
+    type: application
+    urls:
+    - https://github.com/snyk/runtime-sensor/releases/download/runtime-sensor-v1.90.0/runtime-sensor-v1.90.0.tgz
+    version: v1.90.0
+  - apiVersion: v2
+    appVersion: 0.0.1
     created: "2025-03-05T15:04:58.758124552Z"
     description: Snyk Runtime Sensor Helm chart
     digest: 7c45ec33a62803e6f96e431c1e510b76c8e08eb4a6b983c31acf743a5128daba
@@ -1681,4 +1693,4 @@ entries:
     urls:
     - https://github.com/snyk/runtime-sensor/releases/download/runtime-sensor-v1.0.0/runtime-sensor-v1.0.0.tgz
     version: v1.0.0
-generated: "2025-03-05T15:04:58.758729917Z"
+generated: "2025-03-11T13:02:03.276224826Z"
